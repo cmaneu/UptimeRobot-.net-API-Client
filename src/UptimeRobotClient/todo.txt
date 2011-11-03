@@ -1,6 +1,7 @@
-﻿- NewMonitor
-- UpdateMonitor
+﻿[X] NewMonitor
 - DeleteMonitor
+- UpdateMonitor
+
 
 - Adding exception handling
 
@@ -9,3 +10,5 @@
 - Create Windows Phone version
 - Create Silverlight version
 - Test against Mono framework
+
+- Complete NewMonitor method

@@ -24,7 +24,7 @@ namespace UptimeRobotClient.Console
 
             foreach (var m in monitors)
             {
-                System.Console.WriteLine(" -[{0}] {1}",m.CurrentStatus, m.FriendlyName);
+                System.Console.WriteLine(" -[{0}] {2} {1}",m.CurrentStatus, m.FriendlyName, m.Id);
             }
 
             System.Console.WriteLine("--------------------" + Environment.NewLine);
@@ -36,6 +36,8 @@ namespace UptimeRobotClient.Console
             var monitor = context.GetMonitor(monitors.FirstOrDefault().Id.ToString());
             System.Console.WriteLine(" -[{0}] {1}", monitor.CurrentStatus, monitor.FriendlyName);
 
+            System.Console.WriteLine("--------------------" + Environment.NewLine);
+           
 
             // Test GetMonitor(monitorId)
             System.Console.WriteLine("3. Create a new monitor");
@@ -46,6 +48,15 @@ namespace UptimeRobotClient.Console
             newMonitor.Url = "http://www.google.com";
 
             context.AddMonitor(newMonitor);
+
+
+            // Test Delete Monitor
+            System.Console.WriteLine("--------------------" + Environment.NewLine);
+            System.Console.WriteLine("4. Delete a monitor monitor");
+            System.Console.Write("Enter the Id of the monitor to delete : ");
+            string monitorIdToDelete = System.Console.ReadLine();
+            context.DeleteMonitor(monitorIdToDelete);
+            //
 
             System.Console.Read();
         }

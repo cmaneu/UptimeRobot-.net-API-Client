@@ -96,8 +96,20 @@ namespace maneu.tools.UptimeRobotClient
             
         }
 
-        public void DeleteMonitor()
-        {}
+        public void DeleteMonitor(string monitorId)
+        {
+            StringBuilder sb = new StringBuilder(_baseUri);
+            sb.Append("/deleteMonitor?");
+            sb.AppendFormat("apiKey={0}", _apiKey);
+            sb.AppendFormat("&monitorID={0}", monitorId);
+
+            WebClient wc = new WebClient();
+            string result = wc.DownloadString(sb.ToString());
+
+            XDocument xDoc = XDocument.Parse(result);
+
+
+        }
 
 
         private List<Monitor> RequestMonitor(string monitorId = null)
