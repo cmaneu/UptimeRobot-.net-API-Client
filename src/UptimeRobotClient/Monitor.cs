@@ -34,6 +34,11 @@ namespace maneu.tools.UptimeRobotClient
         public string KeywordValue { get; set; }
 
         /// <summary>
+        /// The Url, used ONLY for creation
+        /// </summary>
+        public string Url { get; set; }
+
+        /// <summary>
         /// The credentials used for http monitoring
         /// </summary>
         public NetworkCredential HttpCredentials { get; set; }

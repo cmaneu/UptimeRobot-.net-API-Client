@@ -1,0 +1,11 @@
+﻿- NewMonitor
+- UpdateMonitor
+- DeleteMonitor
+
+- Adding exception handling
+
+- Adding docs
+
+- Create Windows Phone version
+- Create Silverlight version
+- Test against Mono framework

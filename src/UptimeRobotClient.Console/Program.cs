@@ -18,9 +18,9 @@ namespace UptimeRobotClient.Console
             // Test GetMonitors()
             System.Console.WriteLine("1. Get all monitors");
 
-            UptimeRobotContext client = new UptimeRobotContext(ConfigurationManager.AppSettings["uptimerobot-id"]);
+            UptimeRobotContext context = new UptimeRobotContext(ConfigurationManager.AppSettings["uptimerobot-id"]);
 
-            var monitors = client.GetMonitors();
+            var monitors = context.GetMonitors();
 
             foreach (var m in monitors)
             {
@@ -33,8 +33,19 @@ namespace UptimeRobotClient.Console
             // Test GetMonitor(monitorId)
             System.Console.WriteLine("2. Get a monitor by id");
 
-            var monitor = client.GetMonitor(monitors.FirstOrDefault().Id.ToString());
+            var monitor = context.GetMonitor(monitors.FirstOrDefault().Id.ToString());
             System.Console.WriteLine(" -[{0}] {1}", monitor.CurrentStatus, monitor.FriendlyName);
+
+
+            // Test GetMonitor(monitorId)
+            System.Console.WriteLine("3. Create a new monitor");
+
+            Monitor newMonitor = new Monitor();
+            newMonitor.FriendlyName = "Google home page";
+            newMonitor.Type = MonitorType.Http;
+            newMonitor.Url = "http://www.google.com";
+
+            context.AddMonitor(newMonitor);
 
             System.Console.Read();
         }

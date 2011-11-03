@@ -10,13 +10,11 @@ namespace maneu.tools.UptimeRobotClient
 {
     public class UptimeRobotContext : IDisposable
     {
-
         private readonly string _baseUri = "http://api.uptimerobot.com";
 
         private string _apiKey;
         private ResponseFormat _responseFormat = ResponseFormat.Xml;
         
-
         public UptimeRobotContext(string apiKey)
         {
             _apiKey = apiKey;
@@ -28,7 +26,6 @@ namespace maneu.tools.UptimeRobotClient
             set { _apiKey = value; }
         }
 
-
         public List<Monitor> GetMonitors()
         {
             return RequestMonitor();
@@ -39,9 +36,59 @@ namespace maneu.tools.UptimeRobotClient
             return RequestMonitor(monitorId).FirstOrDefault();
         }
 
-        public void AddMonitor()
+        public Monitor AddMonitor(Monitor monitor)
         {
             
+//            •apiKey - required
+//•monitorFriendlyName - required
+//•monitorURL - required
+//•monitorType - required
+//•monitorSubType - optional (required for port monitoring)
+//•monitorPort - optional (required for port monitoring)
+//•monitorKeywordType - optional (required for keyword monitoring)
+//•monitorKeywordValue - optional (required for keyword monitoring)
+//•monitorHTTPUsername - optional
+//•monitorHTTPPasswırd - optional
+
+            if(    string.IsNullOrWhiteSpace(monitor.FriendlyName)
+                || string.IsNullOrWhiteSpace(monitor.Url))
+            {
+                throw new ApplicationException("Some values are required for monitor creation.");
+            }
+
+
+            StringBuilder sb = new StringBuilder(_baseUri);
+            sb.Append("/newMonitor?");
+            sb.AppendFormat("apiKey={0}", _apiKey);
+            sb.AppendFormat("&monitorFriendlyName={0}", monitor.FriendlyName);
+            sb.AppendFormat("&monitorURL={0}", monitor.Url);
+            sb.AppendFormat("&monitorType={0}", (int)monitor.Type);
+            
+            if (monitor.Type == MonitorType.Port)
+            {
+                sb.AppendFormat("&monitorSubType={0}",(int) monitor.Subtype);
+                sb.AppendFormat("&monitorPort={0}", monitor.Port);
+            }
+
+            if (monitor.Type == MonitorType.Keyword)
+            {
+                sb.AppendFormat("&monitorKeywordType=1");
+                sb.AppendFormat("&monitorKeywordValue={0}", monitor.KeywordValue);
+            }
+
+           
+            sb.AppendFormat("&format={0}", _responseFormat);
+
+            WebClient wc = new WebClient();
+            string result = wc.DownloadString(sb.ToString());
+
+            XDocument xDoc = XDocument.Parse(result);
+
+
+            monitor.Id = (int) xDoc.Descendants().Select(doc => doc.Attribute("id")).FirstOrDefault();
+            monitor.CurrentStatus = (Status) Enum.Parse(typeof(Status),(string) xDoc.Descendants().Select(doc => doc.Attribute("status")).FirstOrDefault());
+            
+            return monitor;
         }
 
         public void UpdateMonitor()
