@@ -3,6 +3,11 @@
 *.DS_Store
 
 #Visual Studio files
+
+UptimeRobotClient.Console.exe.config
+App.config
+
+
 *.[Oo]bj
 *.user
 *.aps

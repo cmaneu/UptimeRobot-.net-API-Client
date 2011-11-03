@@ -9,6 +9,20 @@ the "UptimeRobot":http://www.uptimerobot.com api.
 
 This service help you to monitor your websites and services accessed from internet. 
 
+h2. Usage
+
+If you want to test the Console application, please create an App.config file.
+This file is not included in the git sources for security reasons.
+App.config example file : 
+@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <appSettings>
+	<add key="uptimerobot-id" value="_YOUR_API_KEY"/>
+  </appSettings>
+</configuration>
+@
+
 h2. Licence : MS-PL
 
 This code is provided within Microsoft Public License (MS-PL).

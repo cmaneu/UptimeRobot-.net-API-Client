@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace maneu.tools.UptimeRobotClient
 {
-    public class UptimeRobotContext
+    public class UptimeRobotContext : IDisposable
     {
 
         private readonly string _baseUri = "http://api.uptimerobot.com";
@@ -87,6 +87,10 @@ namespace maneu.tools.UptimeRobotClient
             return monitors.ToList();
         }
 
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public enum ResponseFormat
