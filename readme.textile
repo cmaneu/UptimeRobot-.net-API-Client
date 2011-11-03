@@ -1,0 +1,16 @@
+h1. Uptime Robot API Client
+_A .net client for the Uptime Robot API_
+
+h2. About
+This project is an opensource
+
+h2. Licence : MS-PL
+This code is provided within Microsoft Public License (MS-PL).
+See the license.textile file for more informations
+
+h2. Credits
+
+This API us
+
+Christopher MANEU - Microsoft MVP
+"www.maneu.net":http://www.maneu.net
