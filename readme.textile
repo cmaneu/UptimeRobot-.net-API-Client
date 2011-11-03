@@ -1,16 +1,30 @@
 h1. Uptime Robot API Client
+
 _A .net client for the Uptime Robot API_
 
 h2. About
-This project is an opensource
+
+This project is an open source implementation for acessing 
+the "UptimeRobot":http://www.uptimerobot.com api.
+
+This service help you to monitor your websites and services accessed from internet. 
 
 h2. Licence : MS-PL
+
 This code is provided within Microsoft Public License (MS-PL).
-See the license.textile file for more informations
+See the license.textile file for more information.
 
 h2. Credits
 
-This API us
+This API has been created by Christopher MANEU. 
+This work is based on the API documentation located at "http://www.uptimerobot.com/api.asp":http://www.uptimerobot.com/api.asp.
+
+h2. Usage
+
+To be completed...
+
+@ UptimeRobotContext ctx = new UptimeRobotContext(_Your API Key_) @
+
 
 Christopher MANEU - Microsoft MVP
 "www.maneu.net":http://www.maneu.net
