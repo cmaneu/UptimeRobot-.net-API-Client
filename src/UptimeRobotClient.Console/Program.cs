@@ -10,7 +10,12 @@ namespace UptimeRobotClient.Console
     {
         static void Main(string[] args)
         {
-            UptimeRobotContext client = new UptimeRobotContext("u14318-80f7f5bbb5bc5902473ea7f8");
+            System.Console.WriteLine("UptimeRobot .net API Client test application.");
+            System.Console.WriteLine();
+
+            System.Console.WriteLine("1. Get all monitors");
+
+            UptimeRobotContext client = new UptimeRobotContext(YOUR_API_KEY_HERE);
 
             var monitors = client.GetMonitors();
 
