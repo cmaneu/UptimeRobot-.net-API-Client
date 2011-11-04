@@ -91,9 +91,64 @@ namespace maneu.tools.UptimeRobotClient
             return monitor;
         }
 
-        public void UpdateMonitor()
+
+        public void UpdateMonitor(Monitor monitor)
         {
-            
+
+//apiKey - required
+//monitorID - required
+//monitorFriendlyName -optional
+//monitorURL -optional
+//monitorType -optional
+//monitorSubType -optional (used only for port monitoring)
+//monitorPort -optional (used onlyfor port monitoring)
+//monitorKeywordType - optional (used only for keyword monitoring)
+//monitorKeywordValue - optional (used only for keyword monitoring)
+//monitorHTTPUsername - optional
+//monitorHTTPPasswırd - optional
+
+            if (monitor.Id == 0)
+            {
+                throw new ApplicationException("Some values are required for monitor creation.");
+            }
+
+
+            StringBuilder sb = new StringBuilder(_baseUri);
+            sb.Append("/editMonitor?");
+            sb.AppendFormat("apiKey={0}", _apiKey);
+            sb.AppendFormat("&monitorID={0}", monitor.Id);
+            if(!string.IsNullOrEmpty(monitor.FriendlyName))
+                sb.AppendFormat("&monitorFriendlyName={0}", monitor.FriendlyName);
+            if (!string.IsNullOrEmpty(monitor.Url))
+                sb.AppendFormat("&monitorURL={0}", monitor.Url);
+
+            sb.AppendFormat("&monitorType={0}", (int)monitor.Type);
+
+            if (monitor.Type == MonitorType.Port)
+            {
+                sb.AppendFormat("&monitorSubType={0}", (int)monitor.Subtype);
+                sb.AppendFormat("&monitorPort={0}", monitor.Port);
+            }
+
+            if (monitor.Type == MonitorType.Keyword)
+            {
+                sb.AppendFormat("&monitorKeywordType=1");
+                sb.AppendFormat("&monitorKeywordValue={0}", monitor.KeywordValue);
+            }
+
+
+            sb.AppendFormat("&format={0}", _responseFormat);
+
+            WebClient wc = new WebClient();
+            string result = wc.DownloadString(sb.ToString());
+
+            XDocument xDoc = XDocument.Parse(result);
+
+
+            //monitor.Id = (int)xDoc.Descendants().Select(doc => doc.Attribute("id")).FirstOrDefault();
+            //monitor.CurrentStatus = (Status)Enum.Parse(typeof(Status), (string)xDoc.Descendants().Select(doc => doc.Attribute("status")).FirstOrDefault());
+
+            return monitor;
         }
 
         public void DeleteMonitor(string monitorId)

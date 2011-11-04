@@ -39,20 +39,34 @@ namespace UptimeRobotClient.Console
             System.Console.WriteLine("--------------------" + Environment.NewLine);
            
 
-            // Test GetMonitor(monitorId)
-            System.Console.WriteLine("3. Create a new monitor");
+            // Test AddMonitor
+            //System.Console.WriteLine("3. Create a new monitor");
 
-            Monitor newMonitor = new Monitor();
-            newMonitor.FriendlyName = "Google home page";
-            newMonitor.Type = MonitorType.Http;
-            newMonitor.Url = "http://www.google.com";
+            //Monitor newMonitor = new Monitor();
+            //newMonitor.FriendlyName = "Google home page";
+            //newMonitor.Type = MonitorType.Http;
+            //newMonitor.Url = "http://www.google.com";
 
-            context.AddMonitor(newMonitor);
+            //context.AddMonitor(newMonitor);
+
+            //System.Console.WriteLine("--------------------" + Environment.NewLine);
+
+            // Test UpdateMonitor
+
+            System.Console.WriteLine("4. Modify an existing monitor");
+            System.Console.Write("Enter the Id of the monitor to modify : ");
+            string monitorIdToModify = System.Console.ReadLine();
+
+            var monitorToModify = context.GetMonitor(monitorIdToModify);
+            monitorToModify.FriendlyName += "test";
+            context.UpdateMonitor(monitorToModify);
+            monitorToModify = context.GetMonitor(monitorIdToModify);
+            System.Console.WriteLine("New monitor name : " + monitorToModify.FriendlyName);
 
 
             // Test Delete Monitor
             System.Console.WriteLine("--------------------" + Environment.NewLine);
-            System.Console.WriteLine("4. Delete a monitor monitor");
+            System.Console.WriteLine("5. Delete a monitor monitor");
             System.Console.Write("Enter the Id of the monitor to delete : ");
             string monitorIdToDelete = System.Console.ReadLine();
             context.DeleteMonitor(monitorIdToDelete);
