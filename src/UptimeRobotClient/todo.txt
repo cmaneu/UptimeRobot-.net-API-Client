@@ -1,9 +1,9 @@
 ﻿[X] NewMonitor
 [X] DeleteMonitor
-- UpdateMonitor
+[X] UpdateMonitor
 
 
-- Adding exception handling
+[X] Adding exception handling
 
 - Adding docs
 

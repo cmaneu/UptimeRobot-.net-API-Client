@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Monitor.cs" />
+    <Compile Include="UptimeRobotClientException.cs" />
     <Compile Include="UptimeRobotContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
