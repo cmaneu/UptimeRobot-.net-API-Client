@@ -16,18 +16,18 @@ namespace UptimeRobotClient.Console
 
 
             // Test GetMonitors()
-            //System.Console.WriteLine("1. Get all monitors");
+            System.Console.WriteLine( "1. Get all monitors" );
 
-            UptimeRobotContext context = new UptimeRobotContext(ConfigurationManager.AppSettings["uptimerobot-id"]);
+            UptimeRobotContext context = new UptimeRobotContext( ConfigurationManager.AppSettings["uptimerobot-id"] );
 
-            //var monitors = context.GetMonitors();
+            var monitors = context.GetMonitors();
 
-            //foreach (var m in monitors)
-            //{
-            //    System.Console.WriteLine(" -[{0}] {2} {1}",m.CurrentStatus, m.FriendlyName, m.Id);
-            //}
+            foreach ( var m in monitors )
+            {
+                System.Console.WriteLine( " -[{0}] {2} {1}", m.CurrentStatus, m.FriendlyName, m.Id );
+            }
 
-            //System.Console.WriteLine("--------------------" + Environment.NewLine);
+            System.Console.WriteLine( "--------------------" + Environment.NewLine );
            
 
             //// Test GetMonitor(monitorId)
@@ -39,17 +39,17 @@ namespace UptimeRobotClient.Console
             //System.Console.WriteLine("--------------------" + Environment.NewLine);
            
 
-            // Test AddMonitor
-            System.Console.WriteLine("3. Create a new monitor");
+            //// Test AddMonitor
+            //System.Console.WriteLine("3. Create a new monitor");
 
-            Monitor newMonitor = new Monitor();
-            newMonitor.FriendlyName = "Google home page";
-            newMonitor.Type = MonitorType.Http;
-            newMonitor.Url = "http://www.google.com";
+            //Monitor newMonitor = new Monitor();
+            //newMonitor.FriendlyName = "Google home page";
+            //newMonitor.Type = MonitorType.Http;
+            //newMonitor.Url = "http://www.google.com";
 
-            context.AddMonitor(newMonitor);
+            //context.AddMonitor(newMonitor);
 
-            System.Console.WriteLine("--------------------" + Environment.NewLine);
+            //System.Console.WriteLine("--------------------" + Environment.NewLine);
 
             // Test UpdateMonitor
 
@@ -71,6 +71,19 @@ namespace UptimeRobotClient.Console
             //string monitorIdToDelete = System.Console.ReadLine();
             //context.DeleteMonitor(monitorIdToDelete);
             ////
+
+            // Test specific monitor list
+            // NOTE this test requires the first one to run
+            System.Console.WriteLine( "6. Request certain monitors" );
+            
+            // grab the first and last monitors that a user has
+            List<int> monitor_ids = new List<int>() { monitors[0].Id, monitors[monitors.Count - 1].Id };
+            List<Monitor> specific_monitors = context.GetMonitors( monitor_ids );
+
+            foreach ( Monitor m in specific_monitors )
+            {
+                System.Console.WriteLine( " -[{0}] {2} {1}", m.CurrentStatus, m.FriendlyName, m.Id );
+            }
 
             System.Console.Read();
         }

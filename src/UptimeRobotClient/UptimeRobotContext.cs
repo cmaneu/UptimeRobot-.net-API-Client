@@ -36,7 +36,7 @@ namespace maneu.tools.UptimeRobotClient
         /// </summary>
         /// <param name="MonitorIds">List of IDs for the monitors you want to see</param>
         /// <returns>List of monitors matching passed in IDs</returns>
-        public List<Monitor> GetMonitors( List<string> MonitorIds )
+        public List<Monitor> GetMonitors( List<int> MonitorIds )
         {
             string id_delim = "-";
             string merged_ids = string.Join( id_delim, MonitorIds.ToArray() );
