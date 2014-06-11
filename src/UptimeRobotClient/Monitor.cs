@@ -8,10 +8,12 @@ namespace maneu.tools.UptimeRobotClient
 {
     public class Monitor
     {
+        private List<AlertContact> _alertContacts = new List<AlertContact>(); 
+
         /// <summary>
         /// The unique Id of the monitor
         /// </summary>
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// The friendly name of the monitor
@@ -57,6 +59,26 @@ namespace maneu.tools.UptimeRobotClient
         /// The uptime percentage of the monitor
         /// </summary>
         public double UptimeRatio { get; set; }
+
+        /// <summary>
+        /// The keyword type (exists/notexists)
+        /// </summary>
+        public MonitorKeywordType KeywordType { get; set; }
+
+		/// <summary>
+        /// List of AlertContacts for the monitor
+        /// </summary>
+        public IList<AlertContact> AlertContacts
+        {
+            get
+            {
+                return _alertContacts;
+            }
+            set
+            {
+                _alertContacts = value.ToList();
+            }
+        }
     }
 
     public enum MonitorType
@@ -77,6 +99,12 @@ namespace maneu.tools.UptimeRobotClient
         POP3 = 5,
         IMAP = 6,
         CustomPort = 99
+    }
+
+    public enum MonitorKeywordType
+    {
+        Exists = 1,
+        NotExists = 2
     }
 
     public enum Status

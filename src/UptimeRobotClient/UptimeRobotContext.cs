@@ -26,6 +26,11 @@ namespace maneu.tools.UptimeRobotClient
             set { _apiKey = value; }
         }
 
+        public List<AlertContact> GetAlertContacts()
+        {
+            return RequestAlertContact();
+        }
+
         public List<Monitor> GetMonitors()
         {
             return RequestMonitor();
@@ -73,7 +78,7 @@ namespace maneu.tools.UptimeRobotClient
             sb.Append("/newMonitor?");
             sb.AppendFormat("apiKey={0}", _apiKey);
             sb.AppendFormat("&monitorFriendlyName={0}", monitor.FriendlyName);
-            //sb.AppendFormat("&monitorURL={0}", monitor.Url);
+            sb.AppendFormat("&monitorURL={0}", monitor.Url);
             sb.AppendFormat("&monitorType={0}", (int) monitor.Type);
 
             if (monitor.Type == MonitorType.Port)
@@ -84,10 +89,14 @@ namespace maneu.tools.UptimeRobotClient
 
             if (monitor.Type == MonitorType.Keyword)
             {
-                sb.AppendFormat("&monitorKeywordType=1");
+                sb.AppendFormat("&monitorKeywordType={0}", (int) monitor.KeywordType);
                 sb.AppendFormat("&monitorKeywordValue={0}", monitor.KeywordValue);
             }
 
+            if (monitor.AlertContacts.Count > 0)
+            {
+                sb.AppendFormat("&monitorAlertContacts={0}", String.Join("-", monitor.AlertContacts.Select(ac => ac.Id)));
+            }
 
             sb.AppendFormat("&format={0}", _responseFormat);
 
@@ -123,7 +132,7 @@ namespace maneu.tools.UptimeRobotClient
                 throw exception;
             }
 
-            monitor.Id = (int) xDoc.Descendants().Select(doc => doc.Attribute("id")).FirstOrDefault();
+            monitor.Id = xDoc.Descendants().Select(doc => doc.Attribute("id")).FirstOrDefault().ToString();
             monitor.CurrentStatus =
                 (Status)
                 Enum.Parse(typeof (Status),
@@ -147,7 +156,7 @@ namespace maneu.tools.UptimeRobotClient
 //monitorHTTPUsername - optional
 //monitorHTTPPasswırd - optional
 
-            if (monitor.Id == 0)
+            if (String.IsNullOrWhiteSpace(monitor.Id))
             {
                 throw new ApplicationException("Some values are required for monitor creation.");
             }
@@ -172,7 +181,7 @@ namespace maneu.tools.UptimeRobotClient
 
             if (monitor.Type == MonitorType.Keyword)
             {
-                sb.AppendFormat("&monitorKeywordType=1");
+                sb.AppendFormat("&monitorKeywordType={0}", (int)monitor.KeywordType);
                 sb.AppendFormat("&monitorKeywordValue={0}", monitor.KeywordValue);
             }
 
@@ -225,6 +234,54 @@ namespace maneu.tools.UptimeRobotClient
             }
         }
 
+        private List<AlertContact> RequestAlertContact(List<string>alertContactIds = null)
+        {
+            var sb = new StringBuilder(_baseUri);
+            sb.Append("/getAlertContacts?");
+            sb.AppendFormat("apiKey={0}", _apiKey);
+            if (alertContactIds != null && alertContactIds.Count > 0)
+            {
+                sb.AppendFormat("&alertcontacts={0}", String.Join("-", alertContactIds));
+            }
+
+            sb.AppendFormat("&format={0}", _responseFormat);
+
+            var wc = new WebClient();
+            string result = wc.DownloadString(sb.ToString());
+
+            XDocument xDoc = XDocument.Parse(result);
+
+            // Error handling
+            if (xDoc.Root.Name == "error")
+            {
+                var exception = new UptimeRobotClientException(null);
+                UptimeRobotExceptionType exType;
+
+                string errorCode = (string)xDoc.Descendants().Select(doc => doc.Attribute("id")).FirstOrDefault();
+
+
+                Enum.TryParse(errorCode, out exType);
+                exception.ExceptionType = exType == 0 ? UptimeRobotExceptionType.ServerError : exType;
+                throw exception;
+            }
+
+            var alertContactNodes = xDoc.Element("alertcontacts").Descendants("alertcontact");
+
+            var alertContacts = alertContactNodes.Select(ac => new AlertContact
+            {
+                Id = ac.Attribute("id").Value,
+                Type =
+                    (AlertContactType)
+                        Enum.Parse(typeof (AlertContactType),
+                            ac.Attribute("type").Value),
+                Status =
+                    (AlertContactStatus)
+                        Enum.Parse(typeof (AlertContactStatus), ac.Attribute("status").Value),
+                Value = ac.Attribute("value").Value
+            });
+
+            return alertContacts.ToList();
+        }
 
         private List<Monitor> RequestMonitor(string monitorId = null)
         {
@@ -244,7 +301,6 @@ namespace maneu.tools.UptimeRobotClient
 
             XDocument xDoc = XDocument.Parse(result);
 
-
             // Error handling
             if (xDoc.Root.Name == "error")
             {
@@ -262,7 +318,7 @@ namespace maneu.tools.UptimeRobotClient
             IEnumerable<Monitor> monitors = from m in xDoc.Descendants("monitor")
                                             select new Monitor
                                                        {
-                                                           Id = Convert.ToInt32(m.Attribute("id").Value),
+                                                           Id = m.Attribute("id").Value,
                                                            FriendlyName = m.Attribute("friendlyname").Value,
                                                            Type =
                                                                (MonitorType)
