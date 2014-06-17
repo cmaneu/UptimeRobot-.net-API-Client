@@ -110,6 +110,7 @@ namespace maneu.tools.UptimeRobotClient
     public enum Status
     {
         Pause = 0,
+        NotCheckedYet = 1,
         Up = 2,
         SeemsDown = 8,
         Down = 9
